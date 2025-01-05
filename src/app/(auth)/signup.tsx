@@ -3,9 +3,10 @@ import SocialButton from "@/src/components/button/social.button"
 import ShareInput from "@/src/components/input/share.input"
 import { APP_COLOR } from "@/src/utils/constant"
 import { Link } from "expo-router"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { StyleSheet, Text, TextInput, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
+import axios from 'axios'
 
 
 const styles = StyleSheet.create({
@@ -31,10 +32,23 @@ const styles = StyleSheet.create({
     }
 })
 const SignUpPage = () => {
-
+    const URL_BACKEND = process.env.EXPO_PUBLIC_API_URL;
+    console.log(URL_BACKEND)
     const [name, setName] = useState<string>("")
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
+
+    useEffect(() => {
+        const fetchAPI = async () => {
+            try {
+                const data = await axios.get(URL_BACKEND! + "/api/v1/books")
+                console.log(data.data)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        fetchAPI();
+    }, [])
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
