@@ -10,6 +10,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import TextBetweenLine from "@/src/components/text.between.line";
 import { Link, Redirect } from "expo-router";
 
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

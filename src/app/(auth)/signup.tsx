@@ -7,6 +7,8 @@ import { useEffect, useState } from "react"
 import { StyleSheet, Text, TextInput, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import axios from 'axios'
+import { registerAPI } from "@/src/utils/api"
+import Toast from 'react-native-root-toast';
 
 
 const styles = StyleSheet.create({
@@ -32,23 +34,32 @@ const styles = StyleSheet.create({
     }
 })
 const SignUpPage = () => {
-    const URL_BACKEND = process.env.EXPO_PUBLIC_API_URL;
-    console.log(URL_BACKEND)
-    const [name, setName] = useState<string>("")
+    const [username, setUserName] = useState<string>("")
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
+    const [phone, setPhone] = useState<string>("")
 
-    useEffect(() => {
-        const fetchAPI = async () => {
-            try {
-                const data = await axios.get(URL_BACKEND! + "/api/v1/books")
-                console.log(data.data)
-            } catch (error) {
-                console.log(error)
+
+
+
+    const handleSignUp = async () => {
+        try {
+            const res = await registerAPI(username, email, password, phone);
+
+            if (res.data) {
+                alert("Đăng ký thành công");
+            } else {
+                Toast.show(Array.isArray(res.message) ? res.message[0] : res.message, {
+                    duration: Toast.durations.LONG,
+                    textColor: "white",
+                    backgroundColor: APP_COLOR.ORANGE,
+                    opacity: 1
+                })
             }
+        } catch (error) {
+
         }
-        fetchAPI();
-    }, [])
+    }
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -60,15 +71,18 @@ const SignUpPage = () => {
                         marginVertical: 30
                     }}>Đăng ký tài khoản</Text>
                 </View>
-                <ShareInput title="Họ tên" value={name} setValue={setName} />
+                <ShareInput title="Họ tên" value={username} setValue={setUserName} />
                 <ShareInput title="Email" keyboardType="email-address" value={email} setValue={setEmail} />
                 <ShareInput title="Password" secureTextEntry value={password} setValue={setPassword} />
+                <ShareInput title="Số điện thoại" keyboardType="number-pad" value={phone} setValue={setPhone} />
+
+
 
                 <View style={{ marginVertical: 10 }}></View>
 
                 <ShareButton
                     name="Đăng ký"
-                    onPress={() => { console.log(name, email, password) }}
+                    onPress={handleSignUp}
                     textStyles={{ textTransform: "uppercase", color: "#fff", paddingVertical: 5 }}
                     pressStyles={{ alignSelf: "stretch" }}
                     btnStyles={{

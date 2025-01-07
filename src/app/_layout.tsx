@@ -1,14 +1,17 @@
 import { Stack } from "expo-router"
+import { RootSiblingParent } from 'react-native-root-siblings';
 
-
-const LayoutHome = () => {
+const RootLayout = () => {
     return (
-        <Stack>
-            <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen name="(auth)/signup" options={{ headerShown: false }} />
+        <RootSiblingParent>
+            <Stack>
+                <Stack.Screen name="index" options={{ headerShown: false }} />
+                <Stack.Screen name="(auth)/signup" options={{ headerShown: false }} />
 
-        </Stack>
+            </Stack>
+        </RootSiblingParent>
+
     )
 }
 
-export default LayoutHome
+export default RootLayout
