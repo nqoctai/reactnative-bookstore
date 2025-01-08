@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Pressable, StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
+import { ActivityIndicator, Pressable, StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
 
 import { APP_COLOR } from '@/src/utils/constant';
 const styles = StyleSheet.create({
@@ -26,15 +26,18 @@ interface IProps {
     pressStyles?: StyleProp<ViewStyle>;
     btnStyles?: StyleProp<ViewStyle>;
     icons?: ReactNode;
+    loading?: boolean;
 }
 
 const ShareButton = (props: IProps) => {
-    const { name, onPress, textStyles, pressStyles, btnStyles, icons } = props;
+    const { name, onPress, textStyles, pressStyles, btnStyles, icons, loading = false } = props;
     return (
         <Pressable
-            style={({ pressed }) => ([{ opacity: pressed ? 0.5 : 1, alignSelf: 'flex-start' }, pressStyles])}
+            disabled={loading}
+            style={({ pressed }) => ([{ opacity: pressed || loading ? 0.5 : 1, alignSelf: 'flex-start' }, pressStyles])}
             onPress={onPress}>
             <View style={[styles.btnContainer, btnStyles]}>
+                {loading && <ActivityIndicator color={"black"} />}
                 {icons ? icons : null}
 
                 <Text style={textStyles}>{name}</Text>

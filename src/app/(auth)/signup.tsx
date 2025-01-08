@@ -17,20 +17,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         gap: 10
 
-    },
-    inputGroup: {
-        padding: 5,
-        gap: 10
-    }, text: {
-        fontSize: 18
-    },
-    input: {
-        borderColor: "#d0d0d0",
-        borderWidth: 1,
-        paddingHorizontal: 5,
-        paddingVertical: 7,
-        borderRadius: 5
-
     }
 })
 const SignUpPage = () => {
@@ -101,7 +87,7 @@ const SignUpPage = () => {
                     marginVertical: 15
                 }}>
                     <Text style={{ color: "black" }}>Đã có tài khoản?</Text>
-                    <Link href={"/(auth)/signup"}>
+                    <Link href={"/(auth)/login"}>
                         <Text style={{ color: "black", textDecorationLine: "underline" }}>Đăng nhập</Text>
                     </Link>
 
