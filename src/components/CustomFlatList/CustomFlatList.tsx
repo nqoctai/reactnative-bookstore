@@ -1,81 +1,58 @@
+import { useCustomFlatListHook } from '@/src/components/CustomFlatList/hooks/useRestaurantListHook';
+import React from 'react';
+import { Animated, FlatListProps, View } from 'react-native';
 
-import { useCustomFlatListHook } from "@/src/components/CustomFlatList/hooks/useRestaurantListHook";
-import React, { useRef } from "react";
-import { Animated, FlatListProps } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-
-type CustomFlatListProps<T> = Omit<FlatListProps<T>, "ListHeaderComponent"> & {
-    /**
-     * An element that is above all
-     *
-     * Hides when scrolling
-     */
+type CustomFlatListProps<T> = Omit<FlatListProps<T>, 'ListHeaderComponent'> & {
     HeaderComponent: JSX.Element;
-    /**
-     * An element that is above the list but lower than {@link Props.HeaderComponent HeaderComponent} and has the property sticky
-     *
-     * When scrolling is fixed on top
-     */
     StickyElementComponent: JSX.Element;
-    /**
-     * An element that is higher than the list but lower than {@link Props.HeaderComponent HeaderComponent} and {@link Props.StickyElementComponent StickyElementComponent}
-     *
-     * Hides when scrolling
-     */
     TopListElementComponent: JSX.Element;
 };
-
 
 function CustomFlatList<T>({
     style,
     ...props
-}: CustomFlatListProps<T>): React.ReactNode {
-    const listRef = useRef<Animated.FlatList<T> | null>(null);
-
+}: CustomFlatListProps<T>): React.ReactElement {
     const [
         scrollY,
         styles,
         onLayoutHeaderElement,
         onLayoutTopListElement,
-        onLayoutStickyElement
+        onLayoutStickyElement,
     ] = useCustomFlatListHook();
 
     return (
-        <SafeAreaView edges={["bottom"]} style={style}>
-            <Animated.View  // <-- Sticky Component
-                style={styles.stickyElement}
-                onLayout={onLayoutStickyElement}
-            >
-                {props.StickyElementComponent}
-            </Animated.View>
-
-            <Animated.View  // <-- Top of List Component
-                style={styles.topElement}
-                onLayout={onLayoutTopListElement}
-            >
+        <View style={style}>
+            <Animated.View // <-- Top of List Component
+                style={[styles.topElement, { zIndex: 1 }]}
+                onLayout={onLayoutTopListElement}>
                 {props.TopListElementComponent}
             </Animated.View>
 
+            <Animated.View // <-- Sticky Component
+                style={[styles.stickyElement, { zIndex: 2 }]}
+                onLayout={onLayoutStickyElement}>
+                {props.StickyElementComponent}
+            </Animated.View>
+
             <Animated.FlatList<any>
-                ref={listRef}
                 {...props}
-                ListHeaderComponent={ // <-- Header Component
+                ListHeaderComponent={
                     <Animated.View onLayout={onLayoutHeaderElement}>
                         {props.HeaderComponent}
                     </Animated.View>
                 }
                 ListHeaderComponentStyle={[
                     props.ListHeaderComponentStyle,
-                    styles.header
+                    styles.header,
                 ]}
                 onScroll={Animated.event(
                     [{ nativeEvent: { contentOffset: { y: scrollY } } }],
                     {
-                        useNativeDriver: true
+                        useNativeDriver: true,
                     }
                 )}
             />
-        </SafeAreaView>
+        </View>
     );
 }
 

@@ -26,9 +26,7 @@ const data1 = [
 ]
 
 
-const styles = StyleSheet.create({
 
-})
 
 
 const TopListHome = () => {
