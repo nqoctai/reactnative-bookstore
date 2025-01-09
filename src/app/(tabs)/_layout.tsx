@@ -3,8 +3,8 @@ import { Tabs } from "expo-router"
 const LayoutTab = () => {
     return (
         <Tabs>
-            <Tabs.Screen name="index" options={{ title: "Trang chủ" }} />
-            <Tabs.Screen name="setting" options={{ title: "Setting" }} />
+            <Tabs.Screen name="index" options={{ headerShown: false }} />
+            <Tabs.Screen name="setting" options={{ headerShown: false }} />
         </Tabs>
     )
 }
