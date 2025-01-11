@@ -1,14 +1,19 @@
-import ShareButton from "@/src/components/button/share.button"
+
 import { APP_COLOR } from "@/src/utils/constant"
-import { Image, ImageBackground, StyleSheet, Text, View } from "react-native"
-import AntDesign from '@expo/vector-icons/AntDesign';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import bg from '@/src/assets/auth/welcome-bookstore.png';
-import fbLogo from '@/src/assets/auth/facebook.png';
-import ggLogo from '@/src/assets/auth/google.png';
-import { LinearGradient } from 'expo-linear-gradient';
-import TextBetweenLine from "@/src/components/text.between.line";
+import { Button, Image, ImageBackground, StyleSheet, Text, View } from "react-native"
+
 import { Link, Redirect, router } from "expo-router";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect } from "react";
+import React from "react";
+import { getAccountAPI } from "@/src/utils/api";
+import { userCurrentApp } from "@/src/context/app.context";
+import * as SplashScreen from 'expo-splash-screen';
+import * as Font from 'expo-font';
+
+// Keep the splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync();
+
 
 
 const styles = StyleSheet.create({
@@ -40,103 +45,46 @@ const styles = StyleSheet.create({
 
     }
 })
-const WelcomePage = () => {
-    if (true) {
-        return <Redirect href="/(tabs)" />
-    }
+const RootPage = () => {
+    const { setAppState } = userCurrentApp();
+
+
+    useEffect(() => {
+        async function prepare() {
+            try {
+                const res = await getAccountAPI();
+                console.log(res)
+                if (res.data) {
+                    const token = await AsyncStorage.getItem("access_token") ?? "";
+                    setAppState({
+                        account: res.data.account,
+                        access_token: token
+                    })
+                    router.replace("/(tabs)")
+                } else {
+                    // xóa header
+                    router.replace("/(auth)/welcome")
+                }
+            } catch (e) {
+                console.warn(e);
+            } finally {
+                // Tell the application to render
+                await SplashScreen.hideAsync();
+            }
+        }
+
+        prepare();
+    }, []);
+    // if (true) {
+    //     return <Redirect href="/(tabs)" />
+    // }
     return (
-        <ImageBackground style={{ flex: 1 }} source={bg}>
-            <LinearGradient
-                style={{ flex: 1 }}
-                colors={['transparent', '#191B2F']}
-                locations={[0.2, 0.8]}
-            >
-                <View style={styles.container}>
-                    <View style={styles.welcomeText}>
-                        <Text style={styles.heading}>
-                            Welcome to
-                        </Text>
-                        <Text style={styles.body}>
-                            @Nqoc.taii - BookStore
-                        </Text>
-                        <Text style={styles.footer}>
-                            Nền tảng bán sách trực tuyến lớn nhất Việt Nam
-                        </Text>
-                    </View>
 
-                    <View style={styles.welcomeBtn}>
-                        <TextBetweenLine title="Đăng nhập với" />
-                        <View style={{
-                            flexDirection: "row",
-                            justifyContent: "center",
-                            gap: 30
-                        }}>
-                            <ShareButton
-                                name="faceBook"
-                                onPress={() => { alert("me") }}
-                                textStyles={{ textTransform: "uppercase" }}
-                                pressStyles={{ alignSelf: "stretch" }}
-                                btnStyles={{
-                                    justifyContent: "center",
-                                    borderRadius: 30,
-                                    paddingHorizontal: 20,
-                                    backgroundColor: "#fff"
-                                }}
-                                icons={
-                                    <Image source={fbLogo} />
-                                }
-                            />
+        <>
 
-                            <ShareButton
-                                name="google"
-                                onPress={() => { alert("me") }}
-                                textStyles={{ textTransform: "uppercase" }}
-                                pressStyles={{ alignSelf: "stretch" }}
-                                btnStyles={{
-                                    backgroundColor: "#fff",
-                                    justifyContent: "center",
-                                    paddingHorizontal: 30,
-                                    borderRadius: 30
-                                }}
-                                icons={<Image source={ggLogo} />}
-                            />
-                        </View>
-                        <View>
-                            <ShareButton
-                                name="Đăng nhập với email"
-                                onPress={() => { router.navigate("/(auth)/login") }}
-                                textStyles={{ color: "#fff", paddingVertical: 5 }}
-                                pressStyles={{ alignSelf: "stretch" }}
-                                btnStyles={{
-                                    backgroundColor: "#2c2c2c",
-                                    justifyContent: "center",
-                                    marginHorizontal: 50,
-                                    paddingVertical: 10,
-                                    borderRadius: 30,
-                                    borderColor: "#505050",
-                                    borderWidth: 1
-                                }}
-                            />
-                        </View>
-                        <View style={{
-                            flexDirection: "row",
-                            gap: 10,
-                            justifyContent: "center"
-                        }}>
-                            <Text style={{ color: "white" }}>Chưa có tài khoản?</Text>
-                            <Link href={"/(auth)/signup"}>
-                                <Text style={{ color: "white", textDecorationLine: "underline" }}>Đăng ký</Text>
-                            </Link>
+        </>
 
-
-                        </View>
-
-                    </View>
-
-                </View>
-            </LinearGradient>
-        </ImageBackground>
     )
 }
 
-export default WelcomePage
+export default RootPage

@@ -1,3 +1,4 @@
+import AppProvider from "@/src/context/app.context";
 import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { Stack, Tabs } from "expo-router"
 import { StyleSheet, Text, View } from "react-native";
@@ -15,16 +16,20 @@ const RootLayout = () => {
 
     return (
         <RootSiblingParent>
-            <SafeAreaView style={styles.safeArea}>
+            <AppProvider>
+                {/* <SafeAreaView style={styles.safeArea}> */}
                 <ThemeProvider value={navTheme}>
                     <Stack>
                         <Stack.Screen name="index" options={{ headerShown: false }} />
                         <Stack.Screen name="(auth)/signup" options={{ headerShown: false }} />
                         <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />
+                        <Stack.Screen name="(auth)/welcome" options={{ headerShown: false }} />
+
                         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                     </Stack>
                 </ThemeProvider>
-            </SafeAreaView>
+                {/* </SafeAreaView> */}
+            </AppProvider>
         </RootSiblingParent>
     );
 };

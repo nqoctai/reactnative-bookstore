@@ -1,5 +1,5 @@
 
-import { Text, View } from "react-native"
+import { Button, Text, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet } from "react-native";
 import CustomFlatList from "@/src/components/CustomFlatList/CustomFlatList";
@@ -7,12 +7,29 @@ import TopListHome from "@/src/components/home/top.list.home";
 import HeaderHome from "@/src/components/home/header.home";
 import SearchHome from "@/src/components/home/search.home";
 import CollectionHome from "@/src/components/home/collection.home";
+import React, { useState } from "react";
+import { userCurrentApp } from "@/src/context/app.context";
 
 
 const data = [
-    { key: 1, name: "Top Quán Rating 5* tuần này", ref: "" },
-    { key: 2, name: "Quán Mới Lên Sàn", ref: "" },
-    { key: 3, name: "Ăn Thỏa Thích, Freeship 0Đ", ref: "" },
+    {
+        key: 1,
+        name: "Top sách bán chạy nhất",
+        description: "Gợi ý sách được độc giả mua nhiều nhất",
+        refAPI: "&sort=sold,desc"
+    },
+    {
+        key: 2,
+        name: "Sách Mới Lên Sàn",
+        description: "Khám phá ngay hàng loạt sách mới cực hay",
+        refAPI: "&sort=updatedAt,desc"
+    },
+    {
+        key: 3,
+        name: "Sách giá rẻ",
+        description: "Hạt rẻ cho học sinh, sinh viên",
+        refAPI: "&sort=price"
+    },
 ]
 
 const styles = StyleSheet.create({
@@ -56,15 +73,17 @@ const styles = StyleSheet.create({
     }
 });
 const HomeTab = () => {
+
     return (
         <CustomFlatList
             data={data}
             style={styles.list}
-            renderItem={({ item }) => <CollectionHome name={item.name} />}
+            renderItem={({ item }) => <CollectionHome refAPI={item.refAPI} name={item.name} description={item.description} />}
             HeaderComponent={<HeaderHome />}
             StickyElementComponent={<SearchHome />}
             TopListElementComponent={<TopListHome />}
         />
+
     )
 }
 
