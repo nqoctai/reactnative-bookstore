@@ -53,7 +53,6 @@ const RootPage = () => {
         async function prepare() {
             try {
                 const res = await getAccountAPI();
-                console.log(res)
                 if (res.data) {
                     const token = await AsyncStorage.getItem("access_token") ?? "";
                     setAppState({

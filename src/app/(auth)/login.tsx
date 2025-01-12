@@ -47,13 +47,13 @@ const LoginPage = () => {
             setLoading(true)
             await AsyncStorage.removeItem("access_token");
             const res = await loginAPI(email, password);
-            console.log(res)
             setLoading(false)
             if (res.data) {
+
                 await AsyncStorage.setItem("access_token", res?.data?.access_token);
                 setAppState(res.data);
                 router.replace("/(tabs)");
-                alert("Đăng nhập thành công");
+
             } else {
                 Toast.show("Đăng nhập thất bại", {
                     duration: Toast.durations.LONG,

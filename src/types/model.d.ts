@@ -47,4 +47,31 @@ declare global {
         bookImages: string[]
 
     }
+
+    interface IBook {
+        id: number,
+        thumbnail: string,
+        mainText: string,
+        author: string,
+        price: number,
+        sold: number,
+        quantity: number,
+        createdAt: string,
+        updatedAt: string,
+        createdBy: string,
+        updatedBy: string,
+        category: {
+            id: number,
+            name: string
+        },
+        bookImages: string[]
+
+    }
+
+    interface ICategories {
+        id: number,
+        name: string,
+        books: IBooks[]
+
+    }
 }
